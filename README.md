@@ -33,9 +33,21 @@ Der Token ist wie ein Passwort: Wer ihn hat, kann in deinem Namen einchecken. Te
    Der Token landet im iOS-Schlüsselbund, nicht im Skript. (Die erste Fehlermeldung „Kein Datum im Text gefunden“ ist dabei normal.)
 5. Mitteilungen für Scriptable erlauben, wenn iOS fragt.
 
-## 3. Kurzbefehl bauen
+## 3. Kurzbefehl einrichten
 
 Der Kurzbefehl übergibt den Reisetext an das Skript, sodass alles aus dem Teilen-Menü des DB Navigators heraus funktioniert – auch im Hintergrund.
+
+### Schnell: fertigen Kurzbefehl laden
+
+➡️ **[Kurzbefehl „Träwelling check in v15“ hinzufügen](https://www.icloud.com/shortcuts/d4c787d179724c969820468b65497f87)**
+
+Nach dem Import einmal in den Kurzbefehl schauen und prüfen:
+
+- **Datei sichern:** Ordner ist **iCloud Drive → Scriptable** (bei Bedarf neu auswählen, der Ordner lässt sich nicht immer mitteilen), Unterpfad `trwl_input.txt`, *Überschreiben* an.
+- **Skript ausführen:** Hier muss genau der Name stehen, den du deinem Skript in Scriptable gegeben hast. Sonst das Skript neu auswählen.
+- **In App ausführen:** siehe Hinweis unten.
+
+### Oder: selbst bauen
 
 1. App **Kurzbefehle** öffnen → **+** → neuen Kurzbefehl anlegen, Name z. B. **Träwelling**.
 2. Oben auf **ⓘ** (Details) tippen → **Im Share-Sheet anzeigen** einschalten. Als Eingabe **Text** (und **URLs**) zulassen.
