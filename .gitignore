@@ -1,0 +1,11 @@
+# Persönliche Laufzeitdateien des Skripts – niemals hochladen
+trwl_input.txt
+trwl_log.txt
+trwl_cache.json
+
+# Token oder andere Geheimnisse
+*.token
+.env
+
+# System
+.DS_Store
