@@ -1,6 +1,14 @@
 # Träwelling-Import aus dem DB Navigator
 
-Ein Skript für die iOS-App [Scriptable](https://scriptable.app), das eine im **DB Navigator** geteilte Reise automatisch bei [Träwelling](https://traewelling.de) eincheckt – Abschnitt für Abschnitt, ohne Rückfrage. Am Ende kommt **eine** Mitteilung für die ganze Reise, mit jedem Abschnitt als eigener Zeile (✅ eingecheckt, ⚠️ teilweise, ❌ Fehler).
+Ein Skript für die iOS-App [Scriptable](https://scriptable.app), das eine im **DB Navigator** geteilte Reise automatisch bei [Träwelling](https://traewelling.de) eincheckt – Abschnitt für Abschnitt, ohne Rückfrage.
+
+**Was es kann (v26):**
+
+- **Eine Mitteilung pro Reise:** Strecke, Dauer, Kilometer und Träwelling-Punkte, dazu jeder Abschnitt als eigene Zeile (✅ eingecheckt, ⚠️ teilweise, ❌ Fehler). Fahren andere Träwelling-Nutzer im selben Zug mit, steht das auch drin.
+- **Antippen öffnet Träwelling:** Nach dem Check-in kommst du direkt zu deiner Reise oder, wenn etwas fehlt, zum Dashboard zum Nachtragen.
+- **Zwischenstand:** Dauert es länger als ein paar Sekunden, kommt vorab eine ⏳-Mitteilung. Antippen öffnet Scriptable, und der Rest wird eingecheckt.
+- **Lernt deine Strecken:** Haltestellen und Teilstrecken, die du schon gefahren bist, merkt sich das Skript. Wiederholte Fahrten gehen dadurch deutlich schneller.
+- **Robust:** Nummernwechsel (z. B. RB41 → RB40), verschiedene Schreibweisen von Haltestellen, Anfragelimits und iOS-Pausen im Hintergrund werden abgefangen.
 
 Getestet in **Frankfurt, Gießen, Dresden und Berlin** mit Fernverkehr, Regionalzügen (auch mit Nummernwechsel wie RB41 → RB40), S-Bahn, U-Bahn, Tram und Bus.
 
@@ -72,7 +80,9 @@ Ohne iCloud Drive: Im Schritt 4 den lokalen Scriptable-Ordner („Auf meinem iPh
 ## 4. Benutzen
 
 1. Im DB Navigator die Reise öffnen → **Teilen** → **Träwelling** (den Kurzbefehl) wählen.
-2. Nach ein paar Sekunden kommt eine Mitteilung mit allen Abschnitten. Klappt etwas nicht, steht im Titel, wie viele Fahrten eingecheckt wurden, und bei der betroffenen Zeile steht der Grund.
+2. Nach ein paar Sekunden kommt eine Mitteilung mit allen Abschnitten. Antippen öffnet die Reise auf Träwelling.
+3. Klappt etwas nicht, steht im Titel, welcher Abschnitt fehlt, und bei der betroffenen Zeile der Grund. Antippen führt zum Nachtragen auf Träwelling.
+4. Kommt stattdessen **„⏳ Fast fertig – tippen zum Abschließen“**, hat iOS das Skript im Hintergrund angehalten. Einfach antippen: Scriptable öffnet sich und checkt den Rest ein.
 
 Alternativ: Reisetext kopieren und das Skript direkt in Scriptable starten – es liest dann die Zwischenablage.
 
@@ -87,13 +97,13 @@ Ganz oben im Skript:
 | `NOTIFY_SUCCESS` | `false` = Mitteilung nur, wenn etwas nicht geklappt hat |
 | `TIMEOUT` | Sekunden pro Anfrage |
 | `MAX_PARALLEL` | höchstens so viele Anfragen gleichzeitig |
+| `TIME_BUDGET` | Sekunden, nach denen keine weiteren Ausweich-Versuche mehr gestartet werden |
+| `PROGRESS_AFTER` | Sekunden, nach denen ein ⏳-Zwischenstand kommt, falls noch nicht alles fertig ist |
 
 ## Dateien, die das Skript anlegt
 
-Im Scriptable-Ordner entstehen:
-
-- `trwl_log.txt` – Protokoll des letzten Laufs (hilft bei der Fehlersuche)
-- `trwl_cache.json` – gemerkte Haltestellen, damit bekannte Strecken schneller gehen
+- `trwl_log.txt` – Protokoll des letzten Laufs (hilft bei der Fehlersuche), im Scriptable-Ordner in iCloud Drive
+- `trwl_cache.json` – gemerkte Haltestellen und Strecken. Liegt **lokal auf dem iPhone** („Auf meinem iPhone → Scriptable“), weil iCloud zu langsam synchronisiert. Ein älterer Speicher aus iCloud wird beim ersten Start einmalig übernommen.
 - `trwl_input.txt` – Übergabe vom Kurzbefehl, wird nach dem Lesen gelöscht
 
 Diese Dateien enthalten deine Reisen und gehören **nicht** in ein Repository (sie stehen in der `.gitignore`).
@@ -103,7 +113,8 @@ Diese Dateien enthalten deine Reisen und gehören **nicht** in ein Repository (s
 - **„Token ungültig“** – Token in Träwelling neu erstellen und das Skript einmal direkt in Scriptable starten.
 - **„Überschneidung mit bestehendem Check-in“** – Es gibt für diese Zeit schon einen Check-in. In Träwelling löschen und erneut versuchen.
 - **„Träwelling-Anfragelimit“** – 1–2 Minuten warten und nochmal starten.
-- **Keine Mitteilung oder Abbruch im Hintergrund** – Im Kurzbefehl bei *Skript ausführen* die Option **In App ausführen** einschalten.
+- **„⏳ Fast fertig“ oder Abbruch im Hintergrund** – Mitteilung antippen, dann läuft der Rest in Scriptable weiter. Passiert das oft, im Kurzbefehl bei *Skript ausführen* die Option **In App ausführen** einschalten.
+- **Skript schlägt nach einer Streckenänderung fehl** – Den gemerkten Speicher zurücksetzen: `trwl_cache.json` unter „Auf meinem iPhone → Scriptable“ löschen.
 - **Falsche Haltestelle** – In `trwl_log.txt` steht, welche Haltestellen gefunden wurden. Gerne als Issue melden (ohne persönliche Daten).
 - **Zeit weicht um ein paar Minuten ab** – Das kommt aus den Fahrplandaten von Träwelling, nicht aus dem Skript.
 
