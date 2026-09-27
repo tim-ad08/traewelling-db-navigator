@@ -16,11 +16,13 @@ Getestet in **Frankfurt, Gießen, Dresden und Berlin** mit Fernverkehr, Regional
 ## 1. Träwelling-API-Token erstellen
 
 1. Auf [traewelling.de](https://traewelling.de) einloggen.
-2. **Einstellungen → Dienste & Sicherheit → API-Tokens** öffnen.
-3. Einen neuen Token erstellen, einen Namen vergeben (z. B. „Scriptable“).
+2. **Einstellungen → Deine Anwendungen** öffnen ([direkter Link](https://traewelling.de/settings/applications)).
+3. Unten im Kasten **Dein AccessToken** auf **Token generieren** tippen.
 4. Den Token **sofort kopieren** und nirgends sonst speichern.
 
-Der Token ist wie ein Passwort: Wer ihn hat, kann in deinem Namen einchecken. Teile ihn nicht und lade ihn nirgends hoch. Wenn er doch einmal in falsche Hände gerät, löschst du ihn unter *API-Tokens* und erstellst einen neuen.
+Der Token ist wie ein Passwort: Wer ihn hat, kann in deinem Namen einchecken. Teile ihn nicht und lade ihn nirgends hoch. Träwelling selbst fragt dich nie danach. Wenn er doch einmal in falsche Hände gerät, erzeugst du mit *Token generieren* einen neuen und gibst ihn im Skript neu ein.
+
+> Träwelling empfiehlt persönliche Access Tokens eigentlich für Debugging-Zwecke, für feste Integrationen eine OAuth-Anwendung. Für dieses Skript, das nur auf deinen eigenen Account zugreift, ist der persönliche Token der einfachste Weg.
 
 ## 2. Skript in Scriptable anlegen
 
