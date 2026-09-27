@@ -12,7 +12,7 @@ const BUSINESS = 0;           // 0 = privat, 1 = geschäftlich, 2 = Pendeln
 const NOTIFY_SUCCESS = true;  // false = nur bei Fehlern eine Mitteilung schicken
 const TIMEOUT = 8;            // Sekunden pro Anfrage
 const MAX_PARALLEL = 4;       // höchstens so viele Anfragen gleichzeitig
-const VERSION = "v14";
+const VERSION = "v15";
 
 // ---------- Hilfsfunktionen ----------
 const addDays = (d, n) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
@@ -534,14 +534,12 @@ async function runLeg(leg, token) {
       const err = await post(c, token);
       if (err) throw new Error(plan.length > 1 ? `${c.lineName} ab ${stopName(c.from)}: ${err}` : err);
     }
-    const detail = plan.length > 1 || plan.note
-      ? plan.map(c => `${c.lineName}: ${stopName(c.from)} → ${stopName(c.to)}`).join("\n")
-      : label;
-    if (plan.note) return { title: `⚠️ ${leg.train}`, body: `Grund: ${plan.why}\n${detail}\n${plan.note}` };
-    return NOTIFY_SUCCESS ? { title: `✅ ${leg.train}`, body: detail } : null;
+    const lines = plan.map(c => `${c.lineName}: ${stopName(c.from)} → ${stopName(c.to)}`);
+    if (plan.note) return { status: "warn", text: `⚠️ ${lines.join("\n⚠️ ")}\n   ${plan.note} (${plan.why})` };
+    return { status: "ok", text: "✅ " + lines.join("\n✅ ") };
   } catch (e) {
     log(`Fehler ${leg.train}: ${e.message}`);
-    return { title: `❌ ${leg.train}`, body: `${label}\n${e.message}` };
+    return { status: "err", text: `❌ ${leg.train}: ${label}\n   ${e.message}` };
   }
 }
 
@@ -575,11 +573,17 @@ async function main() {
   const [token] = await Promise.all([getToken(), loadCache()]);
 
   // Jeder Abschnitt läuft komplett für sich (suchen -> Fahrtverlauf -> einchecken),
-  // alle Abschnitte gleichzeitig. Mitteilungen kommen in der Reihenfolge der Reise.
-  const results = legs.map(leg => runLeg(leg, token));
-  for (const r of results) {
-    const msg = await r;
-    if (msg) await notify(msg.title, msg.body);
+  // alle Abschnitte gleichzeitig. Am Ende kommt EINE Mitteilung für die ganze Reise.
+  const results = await Promise.all(legs.map(leg => runLeg(leg, token)));
+  const ok = results.filter(r => r.status === "ok").length;
+  const problems = results.length - ok;
+
+  if (problems) {
+    const title = ok ? `⚠️ Träwelling: ${ok} von ${results.length} eingecheckt` : "❌ Träwelling: nichts eingecheckt";
+    await notify(title, results.map(r => r.text).join("\n"));
+  } else if (NOTIFY_SUCCESS) {
+    const title = `✅ Träwelling: ${ok} ${ok === 1 ? "Fahrt" : "Fahrten"} eingecheckt`;
+    await notify(title, results.map(r => r.text).join("\n"));
   }
   saveCache();
   log(`Fertig: ${reqCount} Anfragen`);
