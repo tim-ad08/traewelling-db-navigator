@@ -37,9 +37,11 @@ Der Token ist wie ein Passwort: Wer ihn hat, kann in deinem Namen einchecken. Te
 1. Scriptable öffnen, oben rechts **+** tippen.
 2. Den gesamten Inhalt von [`traewelling-import.js`](traewelling-import.js) einfügen.
 3. Das Skript oben benennen, z. B. **Träwelling Check-in**.
-4. Das Skript **einmal direkt in Scriptable starten** (▶︎). Es fragt nach dem Token – einfügen, *Speichern* tippen.
-   Der Token landet im iOS-Schlüsselbund, nicht im Skript. (Die erste Fehlermeldung „Kein Datum im Text gefunden“ ist dabei normal.)
-5. Mitteilungen für Scriptable erlauben, wenn iOS fragt.
+4. **Ersten Start vorbereiten:** Im DB Navigator eine Verbindung öffnen → **Teilen** → **Kopieren**, sodass der Reisetext in der Zwischenablage liegt.
+   Wichtig: Ohne einen Reisetext mit Datum in der Zwischenablage bricht das Skript vorher ab, und die Abfrage des Tokens erscheint gar nicht.
+5. Jetzt das Skript **manuell direkt in Scriptable starten** (▶︎). Es fragt nach dem Token – einfügen, *Speichern* tippen.
+   Der Token landet im iOS-Schlüsselbund, nicht im Skript. Anschließend checkt das Skript die kopierte Verbindung gleich ein. Wenn du das nicht willst, nimm eine Verbindung aus der Vergangenheit oder lösch den Check-in danach auf Träwelling.
+6. Mitteilungen für Scriptable erlauben, wenn iOS fragt.
 
 ## 3. Kurzbefehl einrichten
 
@@ -108,9 +110,13 @@ Ganz oben im Skript:
 
 Diese Dateien enthalten deine Reisen und gehören **nicht** in ein Repository (sie stehen in der `.gitignore`).
 
+## Bekannte Probleme
+
+- **Manchmal braucht es zwei Anläufe:** Im normalen Alltag kommt es vor, dass ein Check-in erst beim zweiten Teilen bzw. Starten durchgeht. Dann die Reise einfach noch einmal über den Kurzbefehl teilen. An einem Bugfix wird gearbeitet.
+
 ## Häufige Probleme
 
-- **„Token ungültig“** – Token in Träwelling neu erstellen und das Skript einmal direkt in Scriptable starten.
+- **„Token ungültig“** oder **„Kein Token gespeichert“** – Token in Träwelling neu erstellen, eine Verbindung aus dem DB Navigator in die Zwischenablage kopieren und das Skript direkt in Scriptable starten (wie beim ersten Start).
 - **„Überschneidung mit bestehendem Check-in“** – Es gibt für diese Zeit schon einen Check-in. In Träwelling löschen und erneut versuchen.
 - **„Träwelling-Anfragelimit“** – 1–2 Minuten warten und nochmal starten.
 - **„⏳ Fast fertig“ oder Abbruch im Hintergrund** – Mitteilung antippen, dann läuft der Rest in Scriptable weiter. Passiert das oft, im Kurzbefehl bei *Skript ausführen* die Option **In App ausführen** einschalten.
