@@ -14,7 +14,9 @@ const TIMEOUT = 8;            // Sekunden pro Anfrage
 const MAX_PARALLEL = 4;       // höchstens so viele Anfragen gleichzeitig
 const TIME_BUDGET = 45;       // Sekunden: danach keine weiteren Ausweich-Versuche mehr
 const PROGRESS_AFTER = 4;     // Sekunden: ist es dann noch nicht fertig, kommt ein Zwischenstand
-const VERSION = "v26";
+const VERSION = "v27";
+// Träwelling verlangt einen User-Agent, der die Anwendung erkennbar macht (Name, Projektlink, Kontakt)
+const USER_AGENT = `traewelling-db-navigator/${VERSION} (https://github.com/tim-ad08/traewelling-db-navigator; Kontakt über GitHub-Issues)`;
 
 // ---------- Hilfsfunktionen ----------
 const addDays = (d, n) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
@@ -309,6 +311,7 @@ async function requestOnce(path, token, method, body) {
       Authorization: "Bearer " + token,
       Accept: "application/json",
       "Content-Type": "application/json",
+      "User-Agent": USER_AGENT,
     };
     if (body) r.body = JSON.stringify(body);
     let json = null;

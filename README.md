@@ -32,6 +32,16 @@ Der Token ist wie ein Passwort: Wer ihn hat, kann in deinem Namen einchecken. Te
 
 > Träwelling empfiehlt persönliche Access Tokens eigentlich für Debugging-Zwecke, für feste Integrationen eine OAuth-Anwendung. Für dieses Skript, das nur auf deinen eigenen Account zugreift, ist der persönliche Token der einfachste Weg.
 
+### Hinweise zur Träwelling-API
+
+Das Skript hält sich an die API-Nutzungshinweise (zu finden in den Träwelling-Einstellungen beim API-Token) von Träwelling:
+
+- **User-Agent:** Jede Anfrage schickt `traewelling-db-navigator/<Version> (https://github.com/tim-ad08/traewelling-db-navigator; Kontakt über GitHub-Issues)` mit, damit Träwelling die Anwendung erkennt. Wenn du das Skript forkst und selbst weiterentwickelst, trag in `USER_AGENT` oben im Skript deinen eigenen Projektlink ein.
+- **Rate-Limit:** Erlaubt sind höchstens 500 Anfragen pro 5 Minuten. Ein Lauf braucht je nach Strecke etwa 2 bis 20 Anfragen, höchstens 4 laufen gleichzeitig, und bei „429 Too Many Requests“ wartet das Skript und versucht es später erneut.
+- **Token:** Bleibt im iOS-Schlüsselbund auf deinem Gerät und wird nur an Träwelling geschickt.
+- **Daten:** Das Skript verarbeitet nur die Reisen, die du selbst teilst. Protokoll (`trwl_log.txt`) und Speicher (`trwl_cache.json`) bleiben auf deinem Gerät bzw. in deiner iCloud.
+- **Änderungen an der API** kündigt Träwelling im [API-Changelog](https://github.com/Traewelling/traewelling/blob/develop/API_CHANGELOG.md) an. Bricht das Skript nach einem Update von Träwelling, lohnt sich dort ein Blick.
+
 ## 2. Skript in Scriptable anlegen
 
 1. Scriptable öffnen, oben rechts **+** tippen.
